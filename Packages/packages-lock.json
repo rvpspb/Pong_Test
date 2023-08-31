@@ -1,5 +1,19 @@
 {
   "dependencies": {
+    "com.npg.bindlessdi": {
+      "version": "https://github.com/natpuncher/bindlessdi.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d0e443097b419f89e99b79611669ce6f731156c3"
+    },
+    "com.npg.states": {
+      "version": "https://github.com/natpuncher/states.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "57d9d3765d13cc39ab9a48389d8a1b0efda60318"
+    },
     "com.unity.collab-proxy": {
       "version": "1.17.7",
       "depth": 0,
