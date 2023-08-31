@@ -7,13 +7,24 @@ namespace pong.input
 {
     public class Input: MonoBehaviour, IInput
     {
-        public event Action OnUpArrowHold;
-        public event Action OnDownArrowHold;
+        public float Vertical { get; private set; }
+
         public event Action OnAnyKey;
 
-        public void GetInput()
+        private const string Vertical_1 = "Vertical_1";
+
+
+
+        private void Update()
         {
-            //if (UnityEngine.Input.GetKey(KeyCode.UpArrow)) OnKeyHold?.Invoke(KeyCode.UpArrow);
-        }        
+            Vertical = UnityEngine.Input.GetAxisRaw(Vertical_1);
+
+            if (UnityEngine.Input.anyKeyDown)
+            {
+                OnAnyKey?.Invoke();
+            }
+
+            //Debug.Log(Vertical);
+        }
     }
 }

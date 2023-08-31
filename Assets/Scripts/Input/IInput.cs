@@ -4,8 +4,8 @@ namespace pong.input
 {
     public interface IInput 
     {
-        event Action OnUpArrowHold;
-        event Action OnDownArrowHold;
+        public float Vertical { get; }
+                
         event Action OnAnyKey;
     }
 }
