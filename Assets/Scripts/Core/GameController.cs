@@ -20,17 +20,19 @@ namespace pong.core
         private BallSpawner _ballSpawner;
         private GameConfig _gameConfig;
         private BallConfig _ballConfig;
+        private BotConfig _botConfig;
         private IInput _input;
         private PlayerDataHandler _leftPlayerData;
         private PlayerDataHandler _rightPlayerData;
 
         public event Action<PaddleSide, int> OnScore;
 
-        public void Construct(GameConfig gameConfig, IInput input, BallConfig ballConfig)
+        public void Construct(GameConfig gameConfig, IInput input, BallConfig ballConfig, BotConfig botConfig)
         {
             _gameConfig = gameConfig;
             _ballConfig = ballConfig;
             _input = input;
+            _botConfig = botConfig;
             _balls = new List<Ball>();
             _leftPlayerData = new PlayerDataHandler();
             _rightPlayerData = new PlayerDataHandler();
@@ -39,8 +41,8 @@ namespace pong.core
         public void LoadLevel()
         {
             _currentLevel = Instantiate(_levelPrefab);
-            _currentLevel.Construct(_gameConfig, _input);
-            _ballSpawner = _currentLevel.GetComponent<BallSpawner>();            
+            _currentLevel.Construct(_gameConfig, _input, _botConfig, _ballConfig);
+            _ballSpawner = _currentLevel.GetComponent<BallSpawner>();
         }
 
         public void ResetLevel()
@@ -53,11 +55,10 @@ namespace pong.core
         }
 
         private void SpawnBall()
-        {
-            BallView ballView = _ballSpawner.Spawn();
-            Ball ball = new Ball(ballView, _ballConfig);
+        {            
+            Ball ball = _currentLevel.SpawnBall();
             _balls.Add(ball);
-            ballView.OnGoalHit += GoalHit;
+            ball.BallView.OnGoalHit += GoalHit;
         }
 
         private void GoalHit(PaddleSide playerSide)

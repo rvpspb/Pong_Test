@@ -35,7 +35,7 @@ namespace pong.core
             MoveDirection = direction;            
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (!IsActive)
             {
@@ -54,15 +54,20 @@ namespace pong.core
                 OnGoalHit?.Invoke(side);                
             }
             else if (collision.gameObject.TryGetComponent(out PaddleView playerView))
-            {              
+            {
+                //MoveDirection = Bounce(MoveDirection, collision.GetContact(0).normal);
                 OnPaddleHit?.Invoke();                
             }
             else
             {
-                Vector3 newDirection = MoveDirection;
-                newDirection.y *= -1f;
-                SetDirection(newDirection);
+                MoveDirection = Bounce(MoveDirection, collision.GetContact(0).normal);
             }
+        }
+
+        private Vector3 Bounce(Vector3 moveDirection, Vector3 normal)
+        {
+            Vector3 proection = Vector3.Project(moveDirection, normal);            
+            return moveDirection - 2f * proection;
         }
 
         public void Dispose()

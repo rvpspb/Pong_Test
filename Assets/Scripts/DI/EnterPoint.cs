@@ -14,12 +14,13 @@ namespace pong.di
         [SerializeField] private input.Input _input;
         [SerializeField] private GameConfig _gameConfig;
         [SerializeField] private BallConfig _ballConfig;
+        [SerializeField] private BotConfig _botConfig;
 
         private void Awake()
         {
             Container container = Container.Initialize();
 
-            _gameController.Construct(_gameConfig, _input, _ballConfig);
+            _gameController.Construct(_gameConfig, _input, _ballConfig, _botConfig);
 
             container.BindInstance(_input);
             container.BindInstance(_gameConfig);

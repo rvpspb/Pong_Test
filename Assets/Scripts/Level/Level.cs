@@ -17,11 +17,22 @@ namespace pong.core
 
         private GameConfig _gameConfig;
         private IInput _input;
+        private BotConfig _botConfig;
+        private BallConfig _ballConfig;
 
-        public void Construct(GameConfig gameConfig, IInput input)
+        public void Construct(GameConfig gameConfig, IInput input, BotConfig botConfig, BallConfig ballConfig)
         {
             _gameConfig = gameConfig;
             _input = input;
+            _botConfig = botConfig;
+            _ballConfig = ballConfig;
+        }
+
+        public Ball SpawnBall()
+        {
+            BallView ballView = _ballFactory.GetNewInstance();
+            Ball ball = new Ball(ballView, _ballConfig);            
+            return ball;            
         }
 
         public Paddle SpawnPaddle(PaddleType paddleType, PaddleSide paddleSide)
@@ -42,26 +53,27 @@ namespace pong.core
             return player;
         }
 
-        private BotPaddle SpawnBotPaddle(PaddleSide playerSide)
+        private BotPaddle SpawnBotPaddle(PaddleSide paddleSide)
         {
-            PaddleView paddleView = GetPaddleView(playerSide);
+            PaddleView paddleView = GetPaddleView(paddleSide);
             BotAI botAI = paddleView.gameObject.AddComponent<BotAI>();
+            botAI.Construct(_botConfig, paddleSide);
             BotPaddle player = new BotPaddle(paddleView, botAI);
             player.ResetState();
             return player;
         }
 
-        private PaddleView GetPaddleView(PaddleSide playerSide)
+        private PaddleView GetPaddleView(PaddleSide paddleSide)
         {
             PaddleView paddleView = _paddleFactory.GetNewInstance();
-            Vector3 startPosition = GetStartPosition(playerSide);
+            Vector3 startPosition = GetStartPosition(paddleSide);
             paddleView.Construct(startPosition, _gameConfig.PuddleSpeed);
             return paddleView;
         }
 
-        public Vector3 GetStartPosition(PaddleSide playerSide)
+        public Vector3 GetStartPosition(PaddleSide paddleSide)
         {
-            return playerSide == PaddleSide.Left ? Player1StartPoint.position : Player2StartPoint.position;
+            return paddleSide == PaddleSide.Left ? Player1StartPoint.position : Player2StartPoint.position;
         }
 
     }
