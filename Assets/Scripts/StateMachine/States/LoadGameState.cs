@@ -27,13 +27,7 @@ namespace pong.states
 		}
 
 		private async UniTask Load()
-		{		 
-			
-			if (!_unityObjectContainer.TryGetObject(out PlayerView playerView))
-			{
-				return;
-			}
-
+		{	 
 			_gameController.LoadLevel();
 			_gameController.SpawnPlayers();
 

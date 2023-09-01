@@ -5,24 +5,26 @@ using System;
 using pong.config;
 using pong.input;
 using pong.factory;
+using pong.data;
 
 namespace pong.core
 {
     public class GameController : MonoBehaviour
     {
-        [SerializeField] private PlayerView _playerPrefab;
         [SerializeField] private Level _levelPrefab;
 
-        private PlayerController _player1;
-        private PlayerController _player2;
+        private Paddle _leftPaddle;
+        private Paddle _rightPaddle;
         private List<Ball> _balls; 
         private Level _currentLevel;
         private BallSpawner _ballSpawner;
         private GameConfig _gameConfig;
         private BallConfig _ballConfig;
         private IInput _input;
+        private PlayerDataHandler _leftPlayerData;
+        private PlayerDataHandler _rightPlayerData;
 
-        public event Action<PlayerSide> OnGoalHit;
+        public event Action<PaddleSide, int> OnScore;
 
         public void Construct(GameConfig gameConfig, IInput input, BallConfig ballConfig)
         {
@@ -30,26 +32,24 @@ namespace pong.core
             _ballConfig = ballConfig;
             _input = input;
             _balls = new List<Ball>();
+            _leftPlayerData = new PlayerDataHandler();
+            _rightPlayerData = new PlayerDataHandler();
         }
 
         public void LoadLevel()
         {
             _currentLevel = Instantiate(_levelPrefab);
-            _ballSpawner = _currentLevel.GetComponent<BallSpawner>();
-
-            
+            _currentLevel.Construct(_gameConfig, _input);
+            _ballSpawner = _currentLevel.GetComponent<BallSpawner>();            
         }
-
-        private void OnDisable()
-        {
-            
-        }
-
 
         public void ResetLevel()
         {
-            _player1.ResetState();
-            _player2.ResetState();
+            _leftPaddle.ResetState();
+            _rightPaddle.ResetState();
+
+            _leftPlayerData.SetScore(0);
+            _rightPlayerData.SetScore(0);            
         }
 
         private void SpawnBall()
@@ -60,18 +60,28 @@ namespace pong.core
             ballView.OnGoalHit += GoalHit;
         }
 
-        private void GoalHit(PlayerSide playerSide)
+        private void GoalHit(PaddleSide playerSide)
         {
-            OnGoalHit?.Invoke(playerSide);
+            switch (playerSide)
+            {
+                case PaddleSide.Right:
+                    {
+                        _leftPlayerData.AddScore();
+                        OnScore?.Invoke(PaddleSide.Left, _leftPlayerData.Score);
+                    }
+                    break;
+
+                case PaddleSide.Left:
+                    {
+                        _rightPlayerData.AddScore();
+                        OnScore?.Invoke(PaddleSide.Right, _rightPlayerData.Score);
+                    }
+                    break;
+            }            
         }
 
-        public void ClearLevel()
-        {
-            //_player1.ClearView();
-            //_player1 = null;
-            //_player2.ClearView();
-            //_player2 = null;
-
+        public void ClearBalls()
+        {           
             if (_balls == null || _balls.Count == 0)
             {
                 return;
@@ -89,32 +99,29 @@ namespace pong.core
 
         public void SpawnPlayers()
         {            
-            _player1 = SpawnPlayer(_gameConfig.Player1Type, PlayerSide.Left);
-            _player2 = SpawnPlayer(_gameConfig.Player2Type, PlayerSide.Right);
+            _leftPaddle = _currentLevel.SpawnPaddle(_gameConfig.Player1Type, PaddleSide.Left);
+            _rightPaddle = _currentLevel.SpawnPaddle(_gameConfig.Player2Type, PaddleSide.Right);
         }
 
         public void StartGame()
-        {
-            _player1.SetActive(true);
-            _player2.SetActive(true);
-
+        {           
+            _leftPaddle.SetActive(true);
+            _rightPaddle.SetActive(true);
             SpawnBall();
         }
 
-        private PlayerController SpawnPlayer(PlayerType playerType, PlayerSide playerSide)
+        public void StopGame()
         {
-            PlayerView playerView = Instantiate(_playerPrefab);
-            Vector3 startPosition = _currentLevel.GetStartPosition(playerSide);
-            playerView.Construct(startPosition, _gameConfig.PuddleSpeed, playerType == PlayerType.Player ? _input : null);
-            PlayerController player = new PlayerController(playerType, playerView, _input);
-            player.ResetState();
-            return player;
+            _leftPaddle.SetActive(false);
+            _rightPaddle.SetActive(false);
+            ClearBalls();
         }
     }
 }
 
-public enum PlayerSide
+public enum PaddleSide
 {
     Left,
-    Right
+    Right,
+    None
 }

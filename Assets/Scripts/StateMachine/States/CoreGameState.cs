@@ -4,6 +4,8 @@ using npg.bindlessdi.UnityLayer;
 using pong.core;
 using pong.config;
 using pong.input;
+using pong.ui;
+using pong.helpers;
 
 namespace pong.states
 {
@@ -14,6 +16,8 @@ namespace pong.states
 		private readonly GameConfig _gameConfig;
 		private readonly GameController _gameController;
 		private readonly Input _input;
+		private PlayPanel _playPanel;
+		private GameTimer _gameTimer;
 
 		public CoreGameState(GameStateMachine gameStateMachine, UnityObjectContainer unityObjectContainer, GameConfig gameConfig, GameController gameController, Input input)
 		{
@@ -26,36 +30,60 @@ namespace pong.states
 
 		public void Enter()
 		{
+			if (!_unityObjectContainer.TryGetObject(out _playPanel))
+			{
+				return;
+			}
+
+			_gameController.OnScore += OnScore;
+
+			_playPanel.Show();
+			_playPanel.ClearScore();
 			_gameController.StartGame();
 
-			_gameController.OnGoalHit += RestartGame;
-
-			WaitAndStop();
+			_gameTimer = new GameTimer(_gameConfig.GamePeriod, 1);
+			_gameTimer.Start();
+			_gameTimer.OnTargetTime += OnTimer;
 		}
-
-		private async UniTask WaitAndStop()
-        {
-			//await UniTask.Delay(1000, ignoreTimeScale: false);
-
-			//_gameController.ClearLevel();
-
-			//await UniTask.Delay(1000, ignoreTimeScale: false);
-
-			//_gameStateMachine.Enter<StartGameState>();
-		}
-
-		private void RestartGame(PlayerSide playerSide)
-        {
-			_gameStateMachine.Enter<StartGameState>();
-        }
 
 		public void Exit()
 		{
-			_gameController.OnGoalHit -= RestartGame;
+			_gameController.OnScore -= OnScore;
+			_gameTimer.OnTargetTime -= OnTimer;
 
-			_gameController.ClearLevel();
+			_gameController.StopGame();
+			_gameController.ClearBalls();
+			_playPanel.Hide();
+		}
+
+		private void OnTimer()
+        {
+			_gameStateMachine.Enter<EndGameState, PaddleSide>(PaddleSide.None);
+		}
+
+		private void OnScore(PaddleSide paddleSide, int score)
+        {
+			_playPanel.SetScore(paddleSide, score);
+
+			if (score >= _gameConfig.WinScore)
+            {
+				_gameStateMachine.Enter<EndGameState, PaddleSide>(paddleSide);
+				return;
+			}
+
+			StopAndResumeGame();
+		}
+
+		private async UniTask StopAndResumeGame()
+		{
+			//_playPanel.SetScore(paddleSide, score);
+			_gameController.StopGame();
+			await UniTask.Delay(1000);
+			_gameController.StartGame();
 		}
 
 		
+
+			
 	}
 }

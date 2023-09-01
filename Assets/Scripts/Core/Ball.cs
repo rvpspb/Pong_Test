@@ -25,6 +25,7 @@ namespace pong.core
             newDirection.x *= -1f;
             float sideOffset = _ballConfig.BounceSideRandom * (-0.5f + Random.value);
             newDirection.y += sideOffset;
+            newDirection.y = Mathf.Clamp(newDirection.y, -1f, 1f);
             BallView.SetDirection(newDirection);
             BallView.SetSpeed(BallView.MoveSpeed + _ballConfig.BounceSpeedAdd);
         }

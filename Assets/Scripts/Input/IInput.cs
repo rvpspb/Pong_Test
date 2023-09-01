@@ -7,5 +7,6 @@ namespace pong.input
         public float Vertical { get; }
                 
         event Action OnAnyKey;
+        event Action OnUpdate;
     }
 }

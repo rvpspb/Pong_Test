@@ -10,9 +10,9 @@ namespace pong.input
         public float Vertical { get; private set; }
 
         public event Action OnAnyKey;
+        public event Action OnUpdate;
 
         private const string Vertical_1 = "Vertical_1";
-
 
 
         private void Update()
@@ -24,7 +24,7 @@ namespace pong.input
                 OnAnyKey?.Invoke();
             }
 
-            //Debug.Log(Vertical);
+            OnUpdate?.Invoke();
         }
     }
 }

@@ -9,14 +9,14 @@ namespace pong.core
     public class PlayerController
     {
         //public bool IsActive { get; private set; }
-        private PlayerView _playerView;
+        private PaddleView _playerView;
         private IInput _input;
         private BotAI _botAI;
         
-        public PlayerController(PlayerType playerType, PlayerView playerView, IInput input)
+        public PlayerController(PaddleType playerType, PaddleView playerView, IInput input)
         {
             _playerView = playerView;
-            if (playerType == PlayerType.Bot)
+            if (playerType == PaddleType.Bot)
             {
                 _botAI = _playerView.gameObject.AddComponent<BotAI>();
             }

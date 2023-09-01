@@ -171,6 +171,7 @@ GameObject:
   - component: {fileID: 2718228617613246699}
   - component: {fileID: 5417250666046587857}
   - component: {fileID: 7048490773407204297}
+  - component: {fileID: 1894819525943467276}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -215,6 +216,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Player1StartPoint>k__BackingField: {fileID: 4405895545165191237}
   <Player2StartPoint>k__BackingField: {fileID: 4837220710477247626}
+  _ballFactory: {fileID: 5417250666046587857}
+  _paddleFactory: {fileID: 1894819525943467276}
 --- !u!114 &5417250666046587857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,6 +244,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _factory: {fileID: 5417250666046587857}
+--- !u!114 &1894819525943467276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8026175415548635174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c997cb1df4bfd47858dc2371910335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 1653504824191980865, guid: 42540c16a57195d4f865e9c0bd918504, type: 3}
 --- !u!1001 &890137470236828987
 PrefabInstance:
   m_ObjectHideFlags: 0
