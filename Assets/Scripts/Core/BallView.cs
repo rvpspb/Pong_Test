@@ -13,7 +13,7 @@ namespace pong.core
         public Vector3 MoveDirection { get; private set; }
 
         public event Action<PaddleSide> OnGoalHit;
-        public event Action OnPaddleHit;
+        public event Action<PaddleSide> OnPaddleHit;
 
         public bool IsActive { get; private set; }
 
@@ -53,10 +53,9 @@ namespace pong.core
                 PaddleSide side = collision.transform.position.x > 0 ? PaddleSide.Right : PaddleSide.Left;
                 OnGoalHit?.Invoke(side);                
             }
-            else if (collision.gameObject.TryGetComponent(out PaddleView playerView))
+            else if (collision.gameObject.TryGetComponent(out PaddleView paddleView))
             {
-                //MoveDirection = Bounce(MoveDirection, collision.GetContact(0).normal);
-                OnPaddleHit?.Invoke();                
+                OnPaddleHit?.Invoke(paddleView.PaddleSide);                
             }
             else
             {
@@ -72,7 +71,7 @@ namespace pong.core
 
         public void Dispose()
         {
-            Destroy(gameObject);
+            Destroy(gameObject);            
         }
     }
 }

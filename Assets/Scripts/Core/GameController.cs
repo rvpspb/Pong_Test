@@ -17,7 +17,6 @@ namespace pong.core
         private Paddle _rightPaddle;
         private List<Ball> _balls; 
         private Level _currentLevel;
-        private BallSpawner _ballSpawner;
         private GameConfig _gameConfig;
         private BallConfig _ballConfig;
         private BotConfig _botConfig;
@@ -42,7 +41,6 @@ namespace pong.core
         {
             _currentLevel = Instantiate(_levelPrefab);
             _currentLevel.Construct(_gameConfig, _input, _botConfig, _ballConfig);
-            _ballSpawner = _currentLevel.GetComponent<BallSpawner>();
         }
 
         public void ResetLevel()

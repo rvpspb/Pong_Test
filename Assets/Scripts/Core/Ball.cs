@@ -8,7 +8,7 @@ namespace pong.core
     public class Ball
     {
         public BallView BallView { get; private set; }
-        private BallConfig _ballConfig;
+        private readonly BallConfig _ballConfig;
 
         public Ball(BallView ballView, BallConfig ballConfig)
         {
@@ -19,10 +19,10 @@ namespace pong.core
             BallView.OnPaddleHit += PaddleBounce;
         }
 
-        private void PaddleBounce()
+        private void PaddleBounce(PaddleSide paddleSide)
         {
             Vector3 newDirection = BallView.MoveDirection;
-            newDirection.x *= -1f;
+            newDirection.x = paddleSide == PaddleSide.Left ? 1f : -1f;
             float sideOffset = _ballConfig.BounceSideRandom * (-0.5f + Random.value);
             newDirection.y += sideOffset;
             newDirection.y = Mathf.Clamp(newDirection.y, -1f, 1f);

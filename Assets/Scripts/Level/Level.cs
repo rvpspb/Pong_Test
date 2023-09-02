@@ -67,7 +67,7 @@ namespace pong.core
         {
             PaddleView paddleView = _paddleFactory.GetNewInstance();
             Vector3 startPosition = GetStartPosition(paddleSide);
-            paddleView.Construct(startPosition, _gameConfig.PuddleSpeed);
+            paddleView.Construct(paddleSide, startPosition, _gameConfig.PuddleSpeed);
             return paddleView;
         }
 

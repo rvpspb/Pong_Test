@@ -35,14 +35,14 @@ namespace pong.states
 				return;
 			}
 
-			_gameController.OnScore += OnScore;
-
 			_playPanel.Show();
 			_playPanel.ClearScore();
 			_gameController.StartGame();
 
 			_gameTimer = new GameTimer(_gameConfig.GamePeriod, 1);
 			_gameTimer.Start();
+
+			_gameController.OnScore += OnScore;
 			_gameTimer.OnTargetTime += OnTimer;
 		}
 
@@ -76,14 +76,9 @@ namespace pong.states
 
 		private async UniTask StopAndResumeGame()
 		{
-			//_playPanel.SetScore(paddleSide, score);
 			_gameController.StopGame();
 			await UniTask.Delay(1000);
 			_gameController.StartGame();
-		}
-
-		
-
-			
+		}			
 	}
 }

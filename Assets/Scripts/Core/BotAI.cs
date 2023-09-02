@@ -49,18 +49,17 @@ namespace pong.core
             Vector3 extends = new Vector3(0.5f * _botConfig.ReactionDistance, _botConfig.ReactionDistance, 1f);
 
             bool foundBall = Physics.OverlapBoxNonAlloc(position, extends, _colliders, Quaternion.identity, _botConfig.TargetLayer) > 0;
-
-            int needDirection = 0;
-
+            int needDirection = _lastMoveDirection;
             bool ballNear = _ballWasNear;
 
             if (foundBall)
             {
                 float delta = _colliders[0].transform.position.y - transform.position.y;
-
                 ballNear = Mathf.Abs(delta) < _proxy;
 
-                if (ballNear)
+                bool moveCloser = _colliders[0].attachedRigidbody.velocity.x * _checkDirection < 0;
+
+                if (ballNear || !moveCloser)
                 {
                     needDirection = 0;                  
                 }
@@ -77,8 +76,5 @@ namespace pong.core
             
             OnDirectionChange?.Invoke(needDirection);
         }
-
-
-
     }
 }

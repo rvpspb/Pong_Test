@@ -9,16 +9,17 @@ namespace pong.core
     {
         [SerializeField] private Rigidbody _rigidbody;
 
-        private Vector3 _startPosition;
-        private PaddleSide _playerSide;
+        private Vector3 _startPosition;        
         private IInput _input;
         private float _moveSpeed;            
         private float _vertical;
 
+        public PaddleSide PaddleSide { get; private set; }
         public bool IsActive { get; private set; }
 
-        public void Construct(Vector3 startPosition, float moveSpeed)
+        public void Construct(PaddleSide paddleSide, Vector3 startPosition, float moveSpeed)
         {
+            PaddleSide = paddleSide;
             _startPosition = startPosition;            
             _moveSpeed = moveSpeed;                    
         }

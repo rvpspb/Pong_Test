@@ -4,6 +4,7 @@ using npg.bindlessdi.UnityLayer;
 using pong.core;
 using pong.config;
 using pong.input;
+using pong.ui;
 
 namespace pong.states
 {
@@ -11,21 +12,26 @@ namespace pong.states
 	{
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly UnityObjectContainer _unityObjectContainer;
-		private readonly GameConfig _gameConfig;
 		private readonly GameController _gameController;
 		private readonly Input _input;
+		private StartPanel _startPanel;
 
 		public StartGameState(GameStateMachine gameStateMachine, UnityObjectContainer unityObjectContainer, GameConfig gameConfig, GameController gameController, Input input)
 		{
 			_gameStateMachine = gameStateMachine;
 			_unityObjectContainer = unityObjectContainer;
-			_gameConfig = gameConfig;
 			_gameController = gameController;
 			_input = input;
 		}
 
 		public void Enter()
 		{
+			if (!_unityObjectContainer.TryGetObject(out _startPanel))
+			{
+				return;
+			}
+
+			_startPanel.Show();
 			_gameController.ResetLevel();
 
 			_input.OnAnyKey += StartGame;
@@ -33,6 +39,8 @@ namespace pong.states
 
 		public void Exit()
 		{
+			_startPanel.Hide();
+
 			_input.OnAnyKey -= StartGame;
 		}
 
