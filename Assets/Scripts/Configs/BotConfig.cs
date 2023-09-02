@@ -10,7 +10,6 @@ namespace pong.config
         [field: SerializeField] public LayerMask TargetLayer { get; private set; }         
         [field: SerializeField] public float ReactionDistance { get; private set; }
         [field: SerializeField] public float ReactionPeriod { get; private set; }
-        //[field: SerializeField] public float BallSpawnPeriod { get; private set; }
     }
 }
 

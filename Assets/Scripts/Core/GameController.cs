@@ -1,30 +1,25 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System;
 using pong.config;
-using pong.input;
 using pong.factory;
 using pong.data;
 
 namespace pong.core
 {
-    public class GameController : IDisposable
+    public class GameController
     {
-        //[SerializeField] private Level _levelPrefab;
-
         private Paddle _leftPaddle;
         private Paddle _rightPaddle;
         private List<Ball> _balls; 
         private Level _currentLevel;
-        private GameConfig _gameConfig;
-        private BallConfig _ballConfig;
-        private BotConfig _botConfig;
-        private BonusConfig _bonusConfig;
-        private input.Input _input;
+        private readonly GameConfig _gameConfig;
+        private readonly BallConfig _ballConfig;
+        private readonly BotConfig _botConfig;
+        private readonly BonusConfig _bonusConfig;
+        private readonly input.Input _input;
         private PlayerDataHandler _leftPlayerData;
         private PlayerDataHandler _rightPlayerData;
-        private LevelFactory _levelFactory;
+        private readonly LevelFactory _levelFactory;
         private BonusController _bonusController;
 
         public event Action<PaddleSide, int> OnScore;
@@ -48,9 +43,7 @@ namespace pong.core
             _currentLevel = _levelFactory.GetNewInstance();
             _currentLevel.Construct(_gameConfig, _input, _botConfig, _ballConfig);
             SpawnPlayers();
-            _bonusController = new BonusController(_bonusConfig, _leftPaddle, _rightPaddle, _currentLevel, _input);
-
-            _bonusController.OnApplyBonus += OnApplyBonus;
+            _bonusController = new BonusController(_bonusConfig, _leftPaddle, _rightPaddle, _currentLevel, _input);            
         }
 
         public void ResetLevel()
@@ -60,6 +53,8 @@ namespace pong.core
 
             _leftPlayerData.SetScore(0);
             _rightPlayerData.SetScore(0);
+
+            _bonusController.OnApplyBonus += OnApplyBonus;
         }
 
         private void SpawnBall()
@@ -116,18 +111,12 @@ namespace pong.core
         {           
             _leftPaddle.SetActive(true);
             _rightPaddle.SetActive(true);
-            SpawnBall();
-
-            
-            _bonusController.StartSpawnBonuses();
-
-            
+            SpawnBall();            
+            _bonusController.StartSpawnBonuses();            
         }
 
         public void StopGame()
         {
-            //_bonusController.OnApplyBonus -= OnApplyBonus;
-
             _bonusController.Stop();
             _leftPaddle.SetActive(false);
             _rightPaddle.SetActive(false);
@@ -137,6 +126,8 @@ namespace pong.core
         public void EndGame()
         {
             _bonusController.ClearBonuses();
+
+            _bonusController.OnApplyBonus -= OnApplyBonus;
         }
 
         private void OnApplyBonus(BonusType bonusType)
@@ -145,11 +136,6 @@ namespace pong.core
             {
                 SpawnBall();
             }
-        }
-
-        public void Dispose()
-        {
-            _bonusController.OnApplyBonus -= OnApplyBonus;
         }
     }
 }

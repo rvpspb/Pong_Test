@@ -10,7 +10,6 @@ namespace pong.core
         [SerializeField] private Rigidbody _rigidbody;
 
         private Vector3 _startPosition;        
-        //private IInput _input;
         private float _moveSpeed;            
         private float _vertical;
         private float _startSize;
@@ -29,7 +28,6 @@ namespace pong.core
 
         public void ResetState()
         {
-            //_rigidbody.MovePosition(_startPosition);
             transform.position = _startPosition;
             _rigidbody.velocity = Vector3.zero;
             IsActive = false;            

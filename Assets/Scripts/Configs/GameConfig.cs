@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace pong.config
@@ -13,7 +11,6 @@ namespace pong.config
         [field: SerializeField] public float GamePeriod { get; private set; }
         [field: SerializeField] public float PuddleSpeed { get; private set; }
         [field: SerializeField] public float PuddleSize { get; private set; }
-        //[field: SerializeField] public float BallSpawnPeriod { get; private set; }
     }
 }
 

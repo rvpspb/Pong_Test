@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using npg.bindlessdi.UnityLayer;
 using pong.core;
 using pong.config;
-using pong.input;
 using pong.ui;
 using pong.helpers;
 
@@ -14,18 +13,16 @@ namespace pong.states
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly UnityObjectContainer _unityObjectContainer;
 		private readonly GameConfig _gameConfig;
-		private readonly GameController _gameController;
-		private readonly Input _input;
+		private readonly GameController _gameController;		
 		private PlayPanel _playPanel;
 		private GameTimer _gameTimer;
 
-		public CoreGameState(GameStateMachine gameStateMachine, UnityObjectContainer unityObjectContainer, GameConfig gameConfig, GameController gameController, Input input)
+		public CoreGameState(GameStateMachine gameStateMachine, UnityObjectContainer unityObjectContainer, GameConfig gameConfig, GameController gameController)
 		{
 			_gameStateMachine = gameStateMachine;
 			_unityObjectContainer = unityObjectContainer;
 			_gameConfig = gameConfig;
-			_gameController = gameController;
-			_input = input;
+			_gameController = gameController;			
 		}
 
 		public void Enter()

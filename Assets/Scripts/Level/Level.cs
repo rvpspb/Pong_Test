@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using pong.factory;
 using pong.config;
@@ -82,6 +80,5 @@ namespace pong.core
         {
             return paddleSide == PaddleSide.Left ? Player1StartPoint.position : Player2StartPoint.position;
         }
-
     }
 }

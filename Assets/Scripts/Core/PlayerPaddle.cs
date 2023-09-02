@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using pong.input;
-using pong.config;
 
 namespace pong.core
 {

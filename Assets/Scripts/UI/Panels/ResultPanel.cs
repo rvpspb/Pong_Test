@@ -10,8 +10,7 @@ namespace pong.ui
         [SerializeField] private TMP_Text _resultText;
 
         private Dictionary<PaddleSide, string> _playerNames = new() { { PaddleSide.Left, "Player 1" }, { PaddleSide.Right, "Player 2" }, { PaddleSide.None, "Nobody" } };
-
-        
+                
         public void SetWinner(PaddleSide paddleSide)
         {
             string result = $"{_playerNames[paddleSide]} Wins!";

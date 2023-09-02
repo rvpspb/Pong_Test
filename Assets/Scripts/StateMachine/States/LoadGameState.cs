@@ -1,23 +1,16 @@
 using npg.states.Infrastructure;
-using Cysharp.Threading.Tasks;
-using npg.bindlessdi.UnityLayer;
 using pong.core;
-using pong.config;
 
 namespace pong.states
 {
 	public class LoadGameState : IGameState, IState
 	{
-		private readonly GameStateMachine _gameStateMachine;
-		//private readonly UnityObjectContainer _unityObjectContainer;
-		//private readonly GameConfig _gameConfig;
+		private readonly GameStateMachine _gameStateMachine;		
 		private readonly GameController _gameController;
 
-		public LoadGameState(GameStateMachine gameStateMachine, UnityObjectContainer unityObjectContainer, GameConfig gameConfig, GameController gameController)
+		public LoadGameState(GameStateMachine gameStateMachine, GameController gameController)
 		{
-			_gameStateMachine = gameStateMachine;
-			//_unityObjectContainer = unityObjectContainer;
-			//_gameConfig = gameConfig;
+			_gameStateMachine = gameStateMachine;			
 			_gameController = gameController;
 		}
 
@@ -33,9 +26,7 @@ namespace pong.states
 
 		private void Load()
 		{	 
-			_gameController.LoadLevel();
-			//_gameController.SpawnPlayers();
-
+			_gameController.LoadLevel();	
 			_gameStateMachine.Enter<StartGameState>();
 		}		
 	}
