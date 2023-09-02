@@ -68,10 +68,5 @@ namespace pong.core
             Vector3 proection = Vector3.Project(moveDirection, normal);            
             return moveDirection - 2f * proection;
         }
-
-        public void Dispose()
-        {
-            Destroy(gameObject);            
-        }
     }
 }

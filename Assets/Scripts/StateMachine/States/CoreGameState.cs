@@ -39,7 +39,7 @@ namespace pong.states
 			_playPanel.ClearScore();
 			_gameController.StartGame();
 
-			_gameTimer = new GameTimer(_gameConfig.GamePeriod, 1);
+			_gameTimer = new GameTimer(_gameConfig.GamePeriod);
 			_gameTimer.Start();
 
 			_gameController.OnScore += OnScore;
@@ -57,7 +57,7 @@ namespace pong.states
 		}
 
 		private void OnTimer()
-        {
+        {		
 			_gameStateMachine.Enter<EndGameState, PaddleSide>(PaddleSide.None);
 		}
 

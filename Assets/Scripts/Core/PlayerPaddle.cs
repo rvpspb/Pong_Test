@@ -9,11 +9,13 @@ namespace pong.core
     public class PlayerPaddle : Paddle
     {
         private IInput _input;
+        private PaddleSide _paddleSide;
 
-        public PlayerPaddle(PaddleView playerView, IInput input)
+        public PlayerPaddle(PaddleSide paddleSide, PaddleView playerView, IInput input)
         {
-            _playerView = playerView;
+            _playerView = playerView;            
             _input = input;
+            _paddleSide = paddleSide;
         }
 
         public override void SetActive(bool value)
@@ -31,8 +33,8 @@ namespace pong.core
         }
 
         private void OnInputUpdate()
-        {
-            SetMoveDirection(_input.Vertical);
+        {            
+            SetMoveDirection(_input.GetVertical(_paddleSide));
         }
     }
 }

@@ -8,13 +8,12 @@ namespace pong.core
 {
     public class Paddle
     {        
-        protected PaddleView _playerView;        
-
-        
+        protected PaddleView _playerView;
+        protected float _startSize;
 
         public void ResetState()
         {
-            _playerView.ResetState();
+            _playerView.ResetState();            
         }
 
         public virtual void SetActive(bool value)
@@ -27,9 +26,11 @@ namespace pong.core
             _playerView.SetVertical(direction);
         }
 
-        public void ClearView()
+        public void SetSizeMult(float mult)
         {
-            _playerView.Dispose();
+            _playerView.SetSizeMult(mult);
         }
+
+        
     }
 }

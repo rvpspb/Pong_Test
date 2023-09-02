@@ -9,15 +9,15 @@ namespace pong.states
 	public class LoadGameState : IGameState, IState
 	{
 		private readonly GameStateMachine _gameStateMachine;
-		private readonly UnityObjectContainer _unityObjectContainer;
-		private readonly GameConfig _gameConfig;
+		//private readonly UnityObjectContainer _unityObjectContainer;
+		//private readonly GameConfig _gameConfig;
 		private readonly GameController _gameController;
 
 		public LoadGameState(GameStateMachine gameStateMachine, UnityObjectContainer unityObjectContainer, GameConfig gameConfig, GameController gameController)
 		{
 			_gameStateMachine = gameStateMachine;
-			_unityObjectContainer = unityObjectContainer;
-			_gameConfig = gameConfig;
+			//_unityObjectContainer = unityObjectContainer;
+			//_gameConfig = gameConfig;
 			_gameController = gameController;
 		}
 
@@ -26,17 +26,17 @@ namespace pong.states
 			Load();			
 		}
 
-		private async UniTask Load()
-		{	 
-			_gameController.LoadLevel();
-			_gameController.SpawnPlayers();
-
-			_gameStateMachine.Enter<StartGameState>();
-		}
-
 		public void Exit()
 		{
-			
+
 		}
+
+		private void Load()
+		{	 
+			_gameController.LoadLevel();
+			//_gameController.SpawnPlayers();
+
+			_gameStateMachine.Enter<StartGameState>();
+		}		
 	}
 }

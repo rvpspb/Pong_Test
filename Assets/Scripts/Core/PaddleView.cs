@@ -10,25 +10,29 @@ namespace pong.core
         [SerializeField] private Rigidbody _rigidbody;
 
         private Vector3 _startPosition;        
-        private IInput _input;
+        //private IInput _input;
         private float _moveSpeed;            
         private float _vertical;
+        private float _startSize;
 
         public PaddleSide PaddleSide { get; private set; }
         public bool IsActive { get; private set; }
 
-        public void Construct(PaddleSide paddleSide, Vector3 startPosition, float moveSpeed)
+        public void Construct(PaddleSide paddleSide, Vector3 startPosition, float moveSpeed, float startSize)
         {
             PaddleSide = paddleSide;
             _startPosition = startPosition;            
-            _moveSpeed = moveSpeed;                    
+            _moveSpeed = moveSpeed;
+            _startSize = startSize;
+            ApplySize(_startSize);
         }
 
         public void ResetState()
         {
-            _rigidbody.MovePosition(_startPosition);
+            //_rigidbody.MovePosition(_startPosition);
+            transform.position = _startPosition;
             _rigidbody.velocity = Vector3.zero;
-            IsActive = false;
+            IsActive = false;            
         }
 
         private void Update()
@@ -62,9 +66,15 @@ namespace pong.core
             _vertical = vertical;
         }
 
-        public void Dispose()
+        public void ApplySize(float size)
         {
-            Destroy(gameObject);
+            transform.localScale = new Vector3(1f, size, 1f);
+        }
+
+        public void SetSizeMult(float mult)
+        {
+            float size = _startSize * mult;
+            ApplySize(size);            
         }
     }
 }

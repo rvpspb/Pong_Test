@@ -9,9 +9,9 @@ using pong.data;
 
 namespace pong.core
 {
-    public class GameController : MonoBehaviour
+    public class GameController : IDisposable
     {
-        [SerializeField] private Level _levelPrefab;
+        //[SerializeField] private Level _levelPrefab;
 
         private Paddle _leftPaddle;
         private Paddle _rightPaddle;
@@ -20,27 +20,37 @@ namespace pong.core
         private GameConfig _gameConfig;
         private BallConfig _ballConfig;
         private BotConfig _botConfig;
-        private IInput _input;
+        private BonusConfig _bonusConfig;
+        private input.Input _input;
         private PlayerDataHandler _leftPlayerData;
         private PlayerDataHandler _rightPlayerData;
+        private LevelFactory _levelFactory;
+        private BonusController _bonusController;
 
         public event Action<PaddleSide, int> OnScore;
 
-        public void Construct(GameConfig gameConfig, IInput input, BallConfig ballConfig, BotConfig botConfig)
+        public GameController(LevelFactory levelFactory, GameConfig gameConfig, input.Input input, BallConfig ballConfig, BotConfig botConfig, BonusConfig bonusConfig)
         {
+            _levelFactory = levelFactory;
             _gameConfig = gameConfig;
             _ballConfig = ballConfig;
             _input = input;
             _botConfig = botConfig;
+            _bonusConfig = bonusConfig;
+
             _balls = new List<Ball>();
             _leftPlayerData = new PlayerDataHandler();
-            _rightPlayerData = new PlayerDataHandler();
+            _rightPlayerData = new PlayerDataHandler();            
         }
 
         public void LoadLevel()
         {
-            _currentLevel = Instantiate(_levelPrefab);
+            _currentLevel = _levelFactory.GetNewInstance();
             _currentLevel.Construct(_gameConfig, _input, _botConfig, _ballConfig);
+            SpawnPlayers();
+            _bonusController = new BonusController(_bonusConfig, _leftPaddle, _rightPaddle, _currentLevel, _input);
+
+            _bonusController.OnApplyBonus += OnApplyBonus;
         }
 
         public void ResetLevel()
@@ -49,7 +59,7 @@ namespace pong.core
             _rightPaddle.ResetState();
 
             _leftPlayerData.SetScore(0);
-            _rightPlayerData.SetScore(0);            
+            _rightPlayerData.SetScore(0);
         }
 
         private void SpawnBall()
@@ -60,7 +70,7 @@ namespace pong.core
         }
 
         private void GoalHit(PaddleSide playerSide)
-        {
+        {           
             switch (playerSide)
             {
                 case PaddleSide.Right:
@@ -88,7 +98,7 @@ namespace pong.core
 
             for (int i = 0; i < _balls.Count; i++)
             {
-                _balls[i].BallView.OnGoalHit -= GoalHit;
+                _balls[i].BallView.OnGoalHit -= GoalHit;                
                 _balls[i].ClearView();
                 _balls[i] = null;
             }
@@ -96,7 +106,7 @@ namespace pong.core
             _balls.Clear();
         }
 
-        public void SpawnPlayers()
+        private void SpawnPlayers()
         {            
             _leftPaddle = _currentLevel.SpawnPaddle(_gameConfig.Player1Type, PaddleSide.Left);
             _rightPaddle = _currentLevel.SpawnPaddle(_gameConfig.Player2Type, PaddleSide.Right);
@@ -107,13 +117,39 @@ namespace pong.core
             _leftPaddle.SetActive(true);
             _rightPaddle.SetActive(true);
             SpawnBall();
+
+            
+            _bonusController.StartSpawnBonuses();
+
+            
         }
 
         public void StopGame()
         {
+            //_bonusController.OnApplyBonus -= OnApplyBonus;
+
+            _bonusController.Stop();
             _leftPaddle.SetActive(false);
             _rightPaddle.SetActive(false);
             ClearBalls();
+        }
+
+        public void EndGame()
+        {
+            _bonusController.ClearBonuses();
+        }
+
+        private void OnApplyBonus(BonusType bonusType)
+        {
+            if (bonusType == BonusType.CloneBall)
+            {
+                SpawnBall();
+            }
+        }
+
+        public void Dispose()
+        {
+            _bonusController.OnApplyBonus -= OnApplyBonus;
         }
     }
 }

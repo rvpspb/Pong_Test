@@ -34,7 +34,7 @@ namespace pong.core
         {
             BallView.OnPaddleHit += PaddleBounce;
 
-            BallView.Dispose();
+            Object.Destroy(BallView.gameObject);
         }
     }
 }

@@ -3,10 +3,13 @@ using System;
 namespace pong.input
 {
     public interface IInput 
-    {
-        public float Vertical { get; }
+    {        
+        bool Inverted { get; }
                 
         event Action OnAnyKey;
         event Action OnUpdate;
+
+        void SetInverted(bool value);
+        float GetVertical(PaddleSide side);
     }
 }

@@ -43,6 +43,7 @@ namespace pong.states
 		{
 			_input.OnAnyKey -= RestartGame;
 
+			_gameController.EndGame();
 			_resultPanel.Hide();
 		}
 				

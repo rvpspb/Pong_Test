@@ -14,6 +14,7 @@ namespace pong.core
 
         [SerializeField] private BallFactory _ballFactory;
         [SerializeField] private PaddleFactory _paddleFactory;
+        [SerializeField] private BonusFactory _bonusFactory;
 
         private GameConfig _gameConfig;
         private IInput _input;
@@ -45,10 +46,10 @@ namespace pong.core
             }
         }
 
-        private PlayerPaddle SpawnPlayerPaddle(PaddleSide playerSide)
+        private PlayerPaddle SpawnPlayerPaddle(PaddleSide paddleSide)
         {
-            PaddleView paddleView = GetPaddleView(playerSide);
-            PlayerPaddle player = new PlayerPaddle(paddleView, _input);
+            PaddleView paddleView = GetPaddleView(paddleSide);
+            PlayerPaddle player = new PlayerPaddle(paddleSide, paddleView, _input);
             player.ResetState();
             return player;
         }
@@ -67,8 +68,14 @@ namespace pong.core
         {
             PaddleView paddleView = _paddleFactory.GetNewInstance();
             Vector3 startPosition = GetStartPosition(paddleSide);
-            paddleView.Construct(paddleSide, startPosition, _gameConfig.PuddleSpeed);
+            paddleView.Construct(paddleSide, startPosition, _gameConfig.PuddleSpeed, _gameConfig.PuddleSize);
             return paddleView;
+        }
+
+        public BonusView SpawnBonus()
+        {
+            BonusView bonusView = _bonusFactory.GetNewInstance();
+            return bonusView;
         }
 
         public Vector3 GetStartPosition(PaddleSide paddleSide)

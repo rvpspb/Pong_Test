@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class GenericFactory<T> : MonoBehaviour where T: MonoBehaviour
 {
-    [SerializeField] private T _prefab;
+    [SerializeField] protected T _prefab;
 
-    public T GetNewInstance()
+    public virtual T GetNewInstance()
     {
         return Instantiate(_prefab);
     }
